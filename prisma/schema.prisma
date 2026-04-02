@@ -1,0 +1,57 @@
+// This is a Prisma schema file for LogiSmart
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  email      String   @unique @db.VarChar(255)
+  assets     Asset[]
+  documents  Document[]
+  allocations Allocation[]
+  inventory   Inventory[]
+  quotes     Quote[]
+}
+
+model Asset {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Document {
+  id         Int      @id @default(autoincrement())
+  title      String   @db.VarChar(255)
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Allocation {
+  id         Int      @id @default(autoincrement())
+  amount     Float
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Inventory {
+  id         Int      @id @default(autoincrement())
+  itemName   String   @db.VarChar(255)
+  quantity    Int
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Quote {
+  id         Int      @id @default(autoincrement())
+  description String   @db.VarChar(255)
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+}
